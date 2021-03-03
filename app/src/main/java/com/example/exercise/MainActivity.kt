@@ -3,13 +3,10 @@ package com.example.exercise
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,19 +14,16 @@ class MainActivity : AppCompatActivity() {
     lateinit var notificationChannel: NotificationChannel
     lateinit var notificationManager: NotificationManager
     lateinit var builder: Notification.Builder
-    private val channelId = "12345"
-    private val description = "Test Notification"
+
     var resultui:Double=0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as
-                NotificationManager
 
 
         var first=""
         var second=""
-        operate.isClickable=false
+        
 
         if(firstnumber.text.isNullOrEmpty() || secondno.text.isNullOrEmpty()){
             Toast.makeText(this, "Enter Both Fields", Toast.LENGTH_SHORT).show()
@@ -67,7 +61,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             operate.setOnClickListener {
-                btnNotify(it)
+                result.text=resultui.toString()
+
+                addNotification(resultui.toString())
             }
 
 
@@ -79,17 +75,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun btnNotify(view: View) {
-        val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel = NotificationChannel(channelId, description, NotificationManager .IMPORTANCE_HIGH)
-            notificationChannel.lightColor = Color.BLUE
-            notificationChannel.enableVibration(true)
-            notificationManager.createNotificationChannel(notificationChannel)
-            builder = Notification.Builder(this, channelId).setContentTitle("THe result of the operation is $resultui").setContentText("Test Notification").setSmallIcon(R.drawable.ic_launcher_background).setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable
-                    .ic_launcher_background)).setContentIntent(pendingIntent)
-        }
-        notificationManager.notify(12345, builder.build())
+    private fun addNotification(str:String) {
+        val builder = NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher_background) //set icon for notification
+                .setContentTitle("Result") //set title of notification
+                .setContentText("The result of the operation is $str") //this is notification message
+                .setAutoCancel(false) // makes auto cancel of notification
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT) //set priority of notification
+        val notificationIntent = Intent(this, NotificationView::class.java)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        //notification message will get at NotificationView
+        notificationIntent.putExtra("message", "This is a notification message")
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+        builder.setContentIntent(pendingIntent)
+        // Add as notification
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(0, builder.build())
     }
 }
