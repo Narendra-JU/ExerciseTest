@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         val notificationIntent = Intent(this, NotificationView::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        notificationIntent.putExtra("message", "The result of the operation is $str")
+        notificationIntent.putExtra("message", "${firstnumber.text} ${secondno.text} = $str")
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(pendingIntent)
