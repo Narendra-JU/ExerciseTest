@@ -11,10 +11,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var notificationChannel: NotificationChannel
-    lateinit var notificationManager: NotificationManager
-    lateinit var builder: Notification.Builder
-
     var resultui:Double=0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(pendingIntent)
-       
+
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(0, builder.build())
     }
