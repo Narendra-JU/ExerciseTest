@@ -77,19 +77,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun addNotification(str:String) {
         val builder = NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher_background) //set icon for notification
-                .setContentTitle("Result") //set title of notification
-                .setContentText("The result of the operation is $str") //this is notification message
-                .setAutoCancel(false) // makes auto cancel of notification
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT) //set priority of notification
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Result")
+                .setContentText("The result of the operation is $str")
+
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         val notificationIntent = Intent(this, NotificationView::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        //notification message will get at NotificationView
-        notificationIntent.putExtra("message", "This is a notification message")
+
+        notificationIntent.putExtra("message", "The result of the operation is $str")
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(pendingIntent)
-        // Add as notification
+       
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(0, builder.build())
     }
